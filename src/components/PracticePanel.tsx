@@ -358,10 +358,14 @@ export const PracticePanel: React.FC<PracticePanelProps> = ({
     setIsAnalyzing(true);
     setErrorMsg(null);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
+
     try {
       const response = await fetch('/api/analyze-phonetics', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           audioBase64: base64Audio,
           mimeType,
@@ -371,17 +375,23 @@ export const PracticePanel: React.FC<PracticePanelProps> = ({
           audioMetrics: metrics,
         }),
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.details || errorData.error || 'Error de conexión con el servidor');
+        throw new Error(errorData.details || errorData.error || `Error ${response.status}: no se pudo conectar con el servidor.`);
       }
 
       const result: PhoneticAnalysisResult = await response.json();
       onAnalysisComplete(result, audioBlob, audioUrl, metrics);
     } catch (err: any) {
+      clearTimeout(timeoutId);
       console.error('Analysis failed:', err);
-      setErrorMsg(`No se pudo completar el diagnóstico: ${err?.message || 'Inténtalo de nuevo.'}`);
+      if (err?.name === 'AbortError') {
+        setErrorMsg('El análisis tardó demasiado tiempo en responder (timeout). Verifica tu clave API y tu conexión, e inténtalo de nuevo.');
+      } else {
+        setErrorMsg(`No se pudo completar el diagnóstico: ${err?.message || 'Inténtalo de nuevo.'}`);
+      }
     } finally {
       setIsAnalyzing(false);
     }
