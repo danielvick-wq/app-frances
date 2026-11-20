@@ -54,7 +54,7 @@ export default async function handler(req: any, res: any) {
 
     const cleanText = text.trim().slice(0, 180);
 
-    const candidateModels = ['gemini-3.8-flash-lite-tts', 'gemini-2.5-flash'];
+    const candidateModels = ['gemini-3.8-flash-lite-tts'];
     let base64Audio: string | undefined;
     let lastError: any = null;
 

@@ -228,8 +228,8 @@ Analiza el audio adjunto y responde estrictamente siguiendo el esquema JSON conf
       ],
     };
 
-    // Candidate models to try in order of speed, reliability, and public availability
-    const candidateModels = ['gemini-2.5-flash', 'gemini-4-hydrogen', 'gemini-2.0-flash'];
+    // Gemini 4 generation models
+    const candidateModels = ['gemini-4-hydrogen', 'gemini-4-neon'];
     let response: any = null;
     let lastError: any = null;
 
