@@ -1,0 +1,6 @@
+{
+  "name": "Phonétique Française - Correcteur et Espectro Fonético con IA",
+  "description": "Aplicación de corrección fonética en francés con análisis de espectrograma en tiempo real, diagnóstico articulatorio de lengua, labios, nasalidad y acentuación.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
